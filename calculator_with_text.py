@@ -72,42 +72,46 @@ class SetUi():
         self.line_edit.setText(QtCore.QCoreApplication.translate("form", u"0", None))
 
 class Calc():
-    txtlist = ''   
-
+    operator = ['+','-','*','/','.','=']
     def __init__(self):
-        self.operator = ['+','-','*','/','.','=']
+        pass
 
     def ch_Main(self, txt, answer):
-        answer = self.reset_answer_tryagain(txt, answer)
+        f = Functions()
+        answer = f.reset_answer_tryagain(txt, answer)
         if txt == 'Del':
-            answer = self.delete(answer)
+            answer = f.delete(answer)
         elif txt == 'C':
-            answer = self.clear(answer)
+            answer = f.clear(answer)
         elif txt == '=':
             if answer == '0':
                 answer = '0'
-            elif len(answer) == 1 and answer not in self.operator:
+            elif len(answer) == 1 and answer not in Calc.operator:
                 answer = answer
-            elif answer[-1] in self.operator:
-                answer = self.delete(answer)                
+            elif answer[-1] in Calc.operator:
+                answer = f.delete(answer)                
             else:
                 answer = self.calculator(txt, answer)
         else:
             answer += txt
-            answer = self.remove_twice_operator(txt, answer)
-            answer = self.remove_first_zero(answer)
-            answer = self.zero_zero(txt, answer)
+            answer = f.remove_twice_operator(txt, answer)
+            answer = f.remove_first_zero(answer)
+            answer = f.zero_zero(txt, answer)
         return answer
 
     def calculator(self, txt, answer):
-        answer = self.remove_first_zero(answer)
-        answer = self.zero_division_error(answer)        
+        f = Functions()
+        answer = f.remove_first_zero(answer)
+        answer = f.zero_division_error(answer)        
         answer = eval(answer)
         answer = str(answer)
-        answer = self.check_lastdot_zero(answer)
-        answer = self.zero_zero(txt, answer)
+        answer = f.check_lastdot_zero(answer)
+        answer = f.zero_zero(txt, answer)
         return answer
 
+
+class Functions:
+    txtlist = ''
     def delete(self, temp):
         temp = temp[:-1]
         if temp == '':
@@ -120,16 +124,16 @@ class Calc():
 
     def remove_twice_operator(self, txt, answer):
         if len(answer)>1:
-            if answer[-2] in self.operator and answer[-1] in self.operator:
+            if answer[-2] in Calc.operator and answer[-1] in Calc.operator:
                 answer = answer[:-2] + txt
         return answer
 
     def reset_answer_tryagain(self, txt, answer):
-        Calc.txtlist += txt
-        if len(Calc.txtlist)>1:
-            if Calc.txtlist[-2] == '=' and Calc.txtlist[-1] not in self.operator:
+        Functions.txtlist += txt
+        if len(Functions.txtlist)>1:
+            if Functions.txtlist[-2] == '=' and Functions.txtlist[-1] not in Calc.operator:
                 answer = '0'
-                Calc.txtlist = ''
+                Functions.txtlist = ''
         return answer
 
     def zero_division_error(self, answer):
@@ -150,7 +154,7 @@ class Calc():
         if answer[0] == '0':
             if len(answer) > 0 and answer[1] == '.':
                 pass
-            elif len(answer) > 0 and answer[1] not in self.operator:
+            elif len(answer) > 0 and answer[1] not in Calc.operator:
                 answer = answer.lstrip('0')
         else:
             pass
