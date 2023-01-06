@@ -112,6 +112,10 @@ class Calc():
 
 class Functions:
     txtlist = ''
+
+    def __init__(self):
+        pass
+
     def delete(self, temp):
         temp = temp[:-1]
         if temp == '':
